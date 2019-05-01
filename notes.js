@@ -9,14 +9,17 @@ console.log(command, title, content);
 switch (command) {
   case 'list':
     list((error, notes) => {
-      if (error) console.console.error(error.message);
+      if (error) return console.error(error.message);
       notes.forEach((note, index) => {
         console.log(`${index + 1}. ${note.title}`);
       });
     });
     break;
   case 'view':
-    view();
+    view(title, (error, note) => {
+      if (error) return console.error(error.message);
+      console.log(`# ${note.title}\r\n\r\n---\r\n\r\n${note.content}`)
+    });
     break;
   case 'create':
     create();
@@ -47,7 +50,23 @@ function list(done) {
     const notes = JSON.parse(data);
     done(null, notes);
   });
+}
 
+function view(title, done) {
+  checkFileExists();
+  fs.readFile("notes.json", "utf8", function (error, data) {
+    if (error) return done(error);
+    const notes = JSON.parse(data);
+    const note = notes.find(note => {
+      return note.title = title
+    })
+    if (!note) {
+      return done(new Error('Заметка не найдена'))
+    }
+    done(null, note);
+  });
+}
 
-
+function create(params) {
+  
 }
