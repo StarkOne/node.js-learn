@@ -8,7 +8,12 @@ console.log(command, title, content);
 
 switch (command) {
   case 'list':
-    list();
+    list((error, notes) => {
+      if (error) console.console.error(error.message);
+      notes.forEach((note, index) => {
+        console.log(`${index + 1}. ${note.title}`);
+      });
+    });
     break;
   case 'view':
     view();
@@ -35,14 +40,14 @@ function checkFileExists() {
   }); 
 }
 
-function list() {
+function list(done) {
   checkFileExists();
   fs.readFile("notes.json", "utf8", function (error, data) {
-    if (error) throw Error;
-    const lists = JSON.parse(data);
-    console.log(lists);
-    for (let item in lists) {
-      console.log(lists[item].title);
-    }
+    if (error) return done(error);
+    const notes = JSON.parse(data);
+    done(null, notes);
   });
+
+
+
 }
