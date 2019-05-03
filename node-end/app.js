@@ -4,18 +4,14 @@ const morgan = require('morgan');
 
 const app = express();
 
-function log(req, res, next) {
-  let date = new Date(Date.now());
-  console.log(`${date} - ${req.method} - ${req.url}`)
-  next();
-}
+app.set('view engine', 'pug');
 
 app.use(morgan('dev'));
 
 app.use(express.static(__dirname + '/public'))
 
-app.post('/', (req, res) => {
-  res.send({title: "Vlad"});
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Express', todos: todos});
 })
 
 app.get('/todos', (req, res) => {

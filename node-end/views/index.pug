@@ -1,0 +1,12 @@
+extends header
+  
+block main
+  body
+    header
+      h1#title= title
+    if todos
+      ul#todo-list
+        for todo in todos
+          li.todo-list__item(class={'completed': todo.completed})= todo.title
+    else
+      p Задач нет
